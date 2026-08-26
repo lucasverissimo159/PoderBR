@@ -1,27 +1,21 @@
 # Agent State
 
-## Current phase
-Bootstrap
+## Current Phase
+00 Bootstrap
 
-## Completed gates
-- Repository bootstrap not yet executed.
+## Completed Gates
+- [x] Initial repository structure created.
+- [x] Core configuration files (.gitignore, pyproject.toml) added.
+- [x] ADRs for initial architecture and data source strategy drafted.
+- [x] Methodology skeleton created.
 
-## Active tasks
-None.
+## Active Work
+- Finalizing bootstrap documentation and setup scripts.
 
 ## Blockers
-None.
+- None at present.
 
-## Frozen contracts
-None yet.
-
-## Latest decisions
-See `docs/adr/`.
-
-## Next recommended tasks
-1. Product discovery
-2. Data source research
-3. Architecture
-
-## Rule
-Only update this file with verified repository state. Never use it as a place for speculation.
+## Next Tasks
+1. `01 Product Research`: Define the exact basket composition and methodology.
+2. `02 Data Research`: Identify specific IBGE/SIDRA endpoints and variables for income and inflation, and CEPEA/other sources for nominal protein prices.
+3. `03 Architecture`: Define the database schema and Alembic migration strategy based on the researched data model.
