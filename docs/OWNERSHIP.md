@@ -1,15 +1,24 @@
-# Agent Ownership
+# Ownership
 
-| Surface | Primary owner | Shared? | Notes |
-|---|---|---:|---|
-| Product specs | Product | No | Changes require product review |
-| ADRs | Architecture | Yes | Any agent may propose; Architecture integrates |
-| Data contracts | Data Engineering | Yes | Consumers must be checked |
-| Analytics contract | Analytics | Yes | Formula changes require QA |
-| API contract | API/Backend | Yes | Frontend consumer must be checked |
-| Frontend | Frontend | No | Shared design primitives require review |
-| Data quality | Data Quality | No | May request ingestion fixes |
-| Security/CI | Platform | No | Shared CI changes require integration |
-| Release readiness | Integration/Release | Yes | Final authority after audit |
+This document defines file, domain, and shared-contract ownership for the PoderBR platform. Jules agents must consult this to avoid concurrent modification conflicts.
 
-When ownership changes, update this file in the same change as the related ADR or contract.
+## Domains
+
+*   **Ingestion (ETL/Data Sources)**: `app/ingestion/`, `data/raw/`
+*   **Normalization (Data Model)**: `app/models/`, `alembic/`
+*   **Analytics (Domain Logic)**: `app/analytics/`, `analytics/`
+*   **API (Contracts/Routes)**: `app/api/`
+*   **Frontend (UI/Visualization)**: `frontend/` (To be created)
+
+## Shared Contracts
+
+The following files and concepts represent shared contracts. Altering them requires cross-domain coordination and updates to contract tests.
+
+1.  **API OpenAPI Schema**: Changes to endpoint requests/responses.
+2.  **Database Schema**: Alembic migrations and SQLAlchemy models.
+3.  **Methodology Constants**: The defined basket composition and base periods.
+4.  **Normalized Data Schema**: The shape of the data after ingestion and before analytics.
+
+## Agent Ownership (Current Phase)
+
+*   **Bootstrap Agent**: Bootstrapping all base directories, configuration, and documentation. Ownership of `scripts/setup.sh`.

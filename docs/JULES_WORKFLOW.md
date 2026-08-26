@@ -2,28 +2,28 @@
 
 ## Before starting a task
 
-- escolha a branch de origem correta;
-- leia o contexto obrigatório;
-- confirme dependências com outras tarefas;
-- revise o prompt e peça plano para mudanças arquiteturais;
-- confira setup/environment.
+- Escolha a branch de origem correta;
+- Leia o contexto obrigatório (`AGENTS.md`, `docs/PROJECT_CONTEXT.md`, etc);
+- Confirme dependências com outras tarefas em `docs/AGENT_STATE.md`;
+- Revise o prompt e peça plano para mudanças arquiteturais;
+- Confira setup/environment rodando `./scripts/setup.sh`.
 
 ## During task
 
-- não iniciar processos long-running no setup;
-- manter mudanças focadas;
-- usar fixtures para fontes externas;
-- registrar decisões e bloqueios;
-- intervir quando o agente desviar da metodologia.
+- Não iniciar processos long-running no setup;
+- Manter mudanças focadas;
+- Usar fixtures para fontes externas;
+- Registrar decisões em `docs/adr/` e bloqueios em `docs/AGENT_STATE.md`;
+- Intervir (humanos) quando o agente desviar da metodologia.
 
 ## After task
 
-- revisar diff;
-- revisar testes;
-- revisar mudanças de contrato;
-- revisar docs/handoff;
-- decidir branch/PR;
-- integrar somente depois de resolver incompatibilidades.
+- Revisar diff;
+- Revisar testes executando `uv run pytest`;
+- Revisar mudanças de contrato em `docs/OWNERSHIP.md` e schemas;
+- Preencher `docs/handoffs/<task-id>.md` baseado no `docs/handoffs/BOOTSTRAP.md` template;
+- Decidir branch/PR;
+- Integrar somente depois de resolver incompatibilidades.
 
 ## Feedback examples
 
