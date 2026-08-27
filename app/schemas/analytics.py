@@ -1,10 +1,12 @@
 from datetime import date, datetime
-from typing import List, Dict, Optional
+
 from pydantic import BaseModel
+
 
 class GeographyMeta(BaseModel):
     id: str
     name: str
+
 
 class AffordabilityMeta(BaseModel):
     basket_id: str
@@ -13,20 +15,24 @@ class AffordabilityMeta(BaseModel):
     methodology_version: str
     last_updated: datetime
 
+
 class AffordabilityDataPoint(BaseModel):
     date: date
-    basket_cost: Optional[float]
+    basket_cost: float | None
     income: float
-    income_burden_pct: Optional[float]
+    income_burden_pct: float | None
     quality_flag: str
-    components: Dict[str, float]
+    components: dict[str, float]
+
 
 class AffordabilityResponse(BaseModel):
     meta: AffordabilityMeta
-    data: List[AffordabilityDataPoint]
+    data: list[AffordabilityDataPoint]
+
 
 class AnalyticsRequest(BaseModel):
     """Internal DTO for passing request params to the service layer"""
+
     basket_id: str
     geography_id: str
     income_basis: str

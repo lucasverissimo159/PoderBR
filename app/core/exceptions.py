@@ -1,4 +1,4 @@
-from fastapi import HTTPException, status
+from fastapi import status
 
 
 class DomainException(Exception):
@@ -22,6 +22,7 @@ class ValidationException(DomainException):
 
 from fastapi.responses import JSONResponse
 
+
 def domain_exception_handler(request, exc: DomainException):
     """Maps domain exceptions to HTTP responses for FastAPI."""
     status_code = status.HTTP_500_INTERNAL_SERVER_ERROR
@@ -32,5 +33,5 @@ def domain_exception_handler(request, exc: DomainException):
 
     return JSONResponse(
         status_code=status_code,
-        content={"error": {"code": exc.code, "message": exc.message}}
+        content={"error": {"code": exc.code, "message": exc.message}},
     )

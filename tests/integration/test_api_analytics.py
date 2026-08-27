@@ -1,19 +1,20 @@
 from datetime import date
-import pytest
+
 from fastapi.testclient import TestClient
 
-from app.main import app
 from app.api.dependencies.db import get_db
+from app.main import app
 from app.models.core import (
-    Geography,
     Basket,
     BasketItem,
-    NormalizedPrice,
+    Geography,
     NormalizedIncome,
+    NormalizedPrice,
     ObservationStatus,
 )
 
 client = TestClient(app)
+
 
 def test_health_endpoint():
     response = client.get("/health")
