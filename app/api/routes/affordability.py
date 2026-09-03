@@ -23,6 +23,7 @@ def get_affordability(
     income_basis: str,
     start_date: date | None = None,
     end_date: date | None = None,
+    base_date: date | None = None,
     service: AnalyticsService = Depends(get_analytics_service),
 ):
     """
@@ -34,5 +35,6 @@ def get_affordability(
         income_basis=income_basis,
         start_date=start_date,
         end_date=end_date,
+        base_date=base_date,
     )
     return service.calculate_affordability(req)

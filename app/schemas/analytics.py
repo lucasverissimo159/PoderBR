@@ -21,6 +21,8 @@ class AffordabilityDataPoint(BaseModel):
     basket_cost: float | None
     income: float
     income_burden_pct: float | None
+    affordability_ratio: float | None
+    purchasing_power_index: float | None
     quality_flag: str
     components: dict[str, float]
 
@@ -38,3 +40,4 @@ class AnalyticsRequest(BaseModel):
     income_basis: str
     start_date: date | None = None
     end_date: date | None = None
+    base_date: date | None = None  # Date used as the baseline (Index = 100)

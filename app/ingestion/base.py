@@ -8,7 +8,7 @@ from sqlalchemy.orm import Session
 
 from app.models.core import DataSource, IngestionRun, RawObservation
 
-logger = logging.upsert = logging.getLogger(__name__)
+logger = logging.getLogger(__name__)
 
 
 class BaseAdapter:
