@@ -10,6 +10,7 @@ This contract defines the core HTTP APIs exposed by the backend to the frontend.
 - `income_basis` (String): e.g., 'minimum_wage', 'average_income'
 - `start_date` (Date, optional): YYYY-MM-DD
 - `end_date` (Date, optional): YYYY-MM-DD
+- `base_date` (Date, optional): YYYY-MM-DD (Defaults to first available date)
 
 **Response (200 OK):**
 ```json
@@ -27,6 +28,8 @@ This contract defines the core HTTP APIs exposed by the backend to the frontend.
       "basket_cost": 250.50,
       "income": 1412.00,
       "income_burden_pct": 17.74,
+      "affordability_ratio": 5.63,
+      "purchasing_power_index": 100.0,
       "quality_flag": "complete",
       "components": {
         "beef": 150.00,

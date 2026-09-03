@@ -4,15 +4,11 @@ This contract defines the mathematical operations performed in the Analytics dom
 
 ## Formulas
 
-1.  **Basket Cost:**
-    ```text
-    basket_cost(date, geography) = Σ (item_quantity * normalized_price(item, date, geography))
-    ```
-
-2.  **Income Burden:**
-    ```text
-    income_burden_pct(date, geography) = (basket_cost / income(date, geography)) * 100
-    ```
+See `docs/METHODOLOGY.md` for full mathematical definitions of:
+1. Basket Cost
+2. Income Burden
+3. Affordability Ratio
+4. Purchasing Power Index (PPI)
 
 ## Python Interface (Pydantic)
 The Analytics domain must expose functions that accept and return strictly typed Pydantic models.
@@ -20,16 +16,27 @@ The Analytics domain must expose functions that accept and return strictly typed
 ```python
 from pydantic import BaseModel
 from datetime import date
+from typing import Dict, List, Optional
 
 class AnalyticsRequest(BaseModel):
     basket_id: str
     geography_id: str
-    target_date: date
+    income_basis: str
+    start_date: Optional[date] = None
+    end_date: Optional[date] = None
+    base_date: Optional[date] = None
 
-class AffordabilityResult(BaseModel):
+class AffordabilityDataPoint(BaseModel):
     date: date
-    basket_cost: float
+    basket_cost: Optional[float]
     income: float
-    burden_pct: float
-    is_partial: bool
+    income_burden_pct: Optional[float]
+    affordability_ratio: Optional[float]
+    purchasing_power_index: Optional[float]
+    quality_flag: str
+    components: Dict[str, float]
+
+class AffordabilityResponse(BaseModel):
+    meta: dict
+    data: List[AffordabilityDataPoint]
 ```
