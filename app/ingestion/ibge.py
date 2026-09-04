@@ -24,7 +24,10 @@ class IbgeSidraAdapter(BaseAdapter):
         )
 
     def _parse_quarter(self, quarter_str: str) -> date:
-        """Parses 'YYYY0Q' (e.g., '202401' for Q1 2024) to a start date (e.g., 2024-01-01)."""
+        """
+        Parses 'YYYY0Q' (e.g., '202401' for Q1 2024) to a start date
+        (e.g., 2024-01-01).
+        """
         match = re.match(r"(\d{4})0(\d)", quarter_str)
         if not match:
             raise ValueError(f"Invalid quarter format: {quarter_str}")
@@ -36,9 +39,13 @@ class IbgeSidraAdapter(BaseAdapter):
     def fetch_data(self) -> Generator[dict[str, Any], None, None]:
         with httpx.Client(timeout=30.0) as client:
             # We query national (1) and state (3) levels.
-            # Variable 12384 is the specific average income variable within table 10280 (needs verification against actual SIDRA, assuming standard shape for now)
-            # URL format: /api/v3/agregados/{table}/periodos/all/variaveis?localidades=N1[all]|N3[all]
-            url = f"{self.BASE_URL}/{self.DATASET_ID}/periodos/all/variaveis?localidades=N1[all]|N3[all]"
+            # Variable 12384 is the specific average income variable within table 10280
+            # (needs verification against actual SIDRA, assuming standard shape for now)
+            # URL format:
+            # /api/v3/agregados/table/periodos/all/variaveis?localidades=N1[all]|N3[all]
+            locs = "N1[all]|N3[all]"
+            path = f"{self.DATASET_ID}/periodos/all/variaveis?localidades={locs}"
+            url = f"{self.BASE_URL}/{path}"
             response = client.get(url)
             response.raise_for_status()
             data = response.json()

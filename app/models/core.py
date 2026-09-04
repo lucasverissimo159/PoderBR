@@ -75,7 +75,8 @@ class RawObservation(Base):
     retrieved_at: Mapped[datetime] = mapped_column(DateTime, default=func.now())
     run_id: Mapped[str] = mapped_column(ForeignKey("ingestion_runs.id"))
 
-    # Idempotency: We should only have one raw observation per source, date, and geography.
+    # Idempotency: We should only have one raw observation per source, date,
+    # and geography.
     __table_args__ = (
         UniqueConstraint(
             "source_id",

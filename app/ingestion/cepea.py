@@ -8,9 +8,10 @@ from app.models.core import DataSource
 
 class CepeaMockAdapter(BaseAdapter):
     """
-    CEPEA does not have a stable JSON API; data is distributed via HTML scraping or Excel.
-    For this MVP, this adapter serves as a mock implementing the exact interface
-    to prove out the ingestion pipeline without writing a brittle HTML scraper.
+    CEPEA does not have a stable JSON API; data is distributed via HTML scraping
+    or Excel. For this MVP, this adapter serves as a mock implementing the
+    exact interface to prove out the ingestion pipeline without writing a brittle
+    HTML scraper.
     """
 
     def get_source_metadata(self) -> DataSource:

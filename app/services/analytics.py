@@ -1,5 +1,5 @@
 from collections import defaultdict
-from datetime import datetime, date
+from datetime import date, datetime
 from typing import Any
 
 from app.core.exceptions import NotFoundException, ValidationException
@@ -20,7 +20,8 @@ class AnalyticsService:
 
     def calculate_affordability(self, req: AnalyticsRequest) -> AffordabilityResponse:
         """
-        Calculates the affordability index (income burden) idempotently based on historical data.
+        Calculates the affordability index (income burden) idempotently based on
+        historical data.
         Returns a structured response matching FRONTEND_BACKEND_CONTRACT.md.
         """
         # 1. Validate dependencies (Geography, Basket)
@@ -62,8 +63,8 @@ class AnalyticsService:
                     price.price_brl
                 )
 
-        # Because income data (like PNAD) might be quarterly, we need a smarter strategy.
-        # We find the latest available income that applies to each month.
+        # Because income data (like PNAD) might be quarterly, we need a smarter
+        # strategy. We find the latest available income that applies to each month.
         sorted_incomes = sorted(
             [
                 i
@@ -136,7 +137,8 @@ class AnalyticsService:
             has_valid_income = income_val is not None and income_val > 0
 
             if not is_complete or not has_valid_income:
-                # Based on rule: do not interpolate. Mark as partial/missing and return nulls.
+                # Based on rule: do not interpolate. Mark as partial/missing
+                # and return nulls.
                 response_data.append(
                     AffordabilityDataPoint(
                         date=date_str,
@@ -201,7 +203,8 @@ class AnalyticsService:
                 geography=GeographyMeta(id=geo.id, name=geo.name),
                 income_basis=req.income_basis,
                 methodology_version="1.0",
-                last_updated=datetime.now(),  # In a real scenario, take max(retrieved_at)
+                # In a real scenario, take max(retrieved_at)
+                last_updated=datetime.now(),
             ),
             data=response_data,
         )

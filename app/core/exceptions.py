@@ -1,4 +1,5 @@
 from fastapi import status
+from fastapi.responses import JSONResponse
 
 
 class DomainException(Exception):
@@ -18,9 +19,6 @@ class NotFoundException(DomainException):
 class ValidationException(DomainException):
     def __init__(self, message: str):
         super().__init__(message=message, code="VALIDATION_ERROR")
-
-
-from fastapi.responses import JSONResponse
 
 
 def domain_exception_handler(request, exc: DomainException):

@@ -13,11 +13,14 @@ config = context.config
 if config.config_file_name is not None:
     fileConfig(config.config_file_name)
 
-import os
-import sys
+# fmt: off
+import os  # noqa: E402
+import sys  # noqa: E402
 
 sys.path.insert(0, os.path.realpath(os.path.join(os.path.dirname(__file__), "..")))
-from app.db.base import Base
+from app.db.base import Base  # noqa: E402
+
+# fmt: on
 
 # add your model's MetaData object here
 # for 'autogenerate' support

@@ -111,7 +111,10 @@ def test_engine_hand_calculated_metrics():
 
 
 def test_engine_zero_income_handling():
-    """Ensure zero income does not cause ZeroDivisionError, marks as error/partial."""
+    """
+    Ensure that if income is zero, burden is not calculated (would be inf)
+    and flag is 'partial'.
+    """
     prices = [
         NormalizedPrice(
             item_id="beef",
@@ -141,7 +144,8 @@ def test_engine_zero_income_handling():
     res = service.calculate_affordability(req)
 
     m1 = res.data[0]
-    # Because income is 0, has_valid_income is False, meaning the metric defaults to partial/nulls
+    # Because income is 0, has_valid_income is False, meaning the metric
+    # defaults to partial/nulls
     assert m1.quality_flag == "partial"
     assert m1.basket_cost is None
     assert m1.income_burden_pct is None
@@ -181,7 +185,10 @@ def test_engine_partial_basket_handling():
 
 
 def test_engine_quarterly_income_carry_forward():
-    """Ensure quarterly income applies forward to the subsequent months in that quarter."""
+    """
+    Ensure quarterly income applies forward to the subsequent months
+    in that quarter.
+    """
     prices = [
         NormalizedPrice(
             item_id="beef",

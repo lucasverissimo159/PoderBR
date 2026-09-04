@@ -16,7 +16,8 @@ def test_migrations_smoke():
     # Downgrade back to base
     command.downgrade(alembic_cfg, "base")
 
-    # Upgrade back to head to leave the DB in a usable state for other tests if they share it
+    # Upgrade back to head to leave the DB in a usable state
+    # for other tests if they share it
     command.upgrade(alembic_cfg, "head")
 
     assert True
