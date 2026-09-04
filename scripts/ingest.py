@@ -51,11 +51,13 @@ def main():
                 run_record = adapter.run(dry_run=args.dry_run)
                 if args.dry_run:
                     logger.info(
-                        f"Dry run completed for {adapter_name}. Would have processed {run_record.records_processed} records."
+                        f"Dry run completed for {adapter_name}. "
+                        f"Would have processed {run_record.records_processed} records."
                     )
                 else:
                     logger.info(
-                        f"Success for {adapter_name}. Run ID: {run_record.id}. Processed: {run_record.records_processed}"
+                        f"Success for {adapter_name}. Run ID: {run_record.id}. "
+                        f"Processed: {run_record.records_processed}"
                     )
             except Exception as e:
                 logger.error(f"Failed ingestion for {adapter_name}: {e}")

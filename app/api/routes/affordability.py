@@ -27,7 +27,8 @@ def get_affordability(
     service: AnalyticsService = Depends(get_analytics_service),
 ):
     """
-    Retrieve the affordability index (income burden) for a specific basket and geography.
+    Retrieve the affordability index (income burden) for a specific basket
+    and geography.
     """
     req = AnalyticsRequest(
         basket_id=basket_id,

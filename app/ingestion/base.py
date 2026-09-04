@@ -48,7 +48,8 @@ class BaseAdapter:
                     records_processed += 1
                     continue
 
-                # We use SQLite's specific ON CONFLICT DO UPDATE (or IGNORE) for idempotency.
+                # We use SQLite's specific ON CONFLICT DO UPDATE (or IGNORE)
+                # for idempotency.
                 # In Postgres, this would use sqlalchemy.dialects.postgresql.insert
                 stmt = (
                     insert(RawObservation)
