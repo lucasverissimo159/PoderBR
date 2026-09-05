@@ -125,7 +125,8 @@ class AnalyticsService:
                 b_cost = sum(
                     b_comps[item_id] * item_quantities[item_id] for item_id in b_comps
                 )
-                base_affordability_ratio = b_inc / b_cost
+                if b_cost > 0:
+                    base_affordability_ratio = b_inc / b_cost
 
         # Second Pass: Calculate all metrics
         for date_str in sorted_dates:
@@ -179,7 +180,7 @@ class AnalyticsService:
             affordability_ratio = income_val / basket_cost
 
             ppi = None
-            if base_affordability_ratio is not None:
+            if base_affordability_ratio is not None and base_affordability_ratio > 0:
                 # PPI = (Current Affordability / Base Affordability) * 100
                 ppi = (affordability_ratio / base_affordability_ratio) * 100
 
