@@ -10,12 +10,18 @@ export function MainLayout() {
             <Link to="/" className="focus-ring rounded-sm">
               <h1 className="text-xl font-bold text-primary">PoderBR</h1>
             </Link>
-            <nav aria-label="Main Navigation">
+            <nav aria-label="Main Navigation" className="flex space-x-4">
               <Link
                 to="/"
                 className="text-text-secondary hover:text-primary font-medium focus-ring rounded-sm px-2 py-1"
               >
                 Dashboard
+              </Link>
+              <Link
+                to="/comparison"
+                className="text-text-secondary hover:text-primary font-medium focus-ring rounded-sm px-2 py-1"
+              >
+                Comparison
               </Link>
             </nav>
           </div>
