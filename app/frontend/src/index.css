@@ -1,0 +1,26 @@
+@import "tailwindcss";
+
+@theme {
+  --color-primary: #1d4ed8; /* blue-700 */
+  --color-primary-focus: #1e3a8a; /* blue-900 */
+  --color-surface: #ffffff;
+  --color-background: #f8fafc; /* slate-50 */
+  --color-text-primary: #0f172a; /* slate-900 */
+  --color-text-secondary: #475569; /* slate-600 */
+  --color-border: #e2e8f0; /* slate-200 */
+
+  --color-error: #b91c1c; /* red-700 */
+  --color-error-bg: #fef2f2; /* red-50 */
+}
+
+@layer base {
+  body {
+    @apply bg-background text-text-primary antialiased;
+  }
+}
+
+@layer utilities {
+  .focus-ring {
+    @apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2;
+  }
+}
