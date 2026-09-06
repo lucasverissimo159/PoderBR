@@ -1,5 +1,8 @@
 from datetime import date
-from hypothesis import given, strategies as st
+
+from hypothesis import given
+from hypothesis import strategies as st
+
 from app.models.core import (
     Basket,
     BasketItem,

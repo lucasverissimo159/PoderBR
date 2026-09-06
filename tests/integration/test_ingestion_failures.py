@@ -1,5 +1,6 @@
 import pytest
-from httpx import Response, Request, TimeoutException
+from httpx import Request, Response, TimeoutException
+
 from app.ingestion.ibge import IbgeSidraAdapter
 from app.models.core import IngestionRun, RawObservation
 

@@ -1,9 +1,10 @@
 from datetime import date
 
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, Request
 from sqlalchemy.orm import Session
 
 from app.api.dependencies.db import get_db
+from app.core.security import limiter
 from app.repositories.analytics import AnalyticsRepository
 from app.schemas.analytics import AffordabilityResponse, AnalyticsRequest
 from app.services.analytics import AnalyticsService
@@ -17,7 +18,9 @@ def get_analytics_service(db: Session = Depends(get_db)) -> AnalyticsService:
 
 
 @router.get("/affordability", response_model=AffordabilityResponse)
+@limiter.limit("100/minute")
 def get_affordability(
+    request: Request,
     basket_id: str,
     geography_id: str,
     income_basis: str,

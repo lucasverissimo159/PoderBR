@@ -1,4 +1,5 @@
 from fastapi.testclient import TestClient
+
 from app.main import app
 
 client = TestClient(app)
@@ -23,14 +24,12 @@ def test_api_not_found_geography(db_session):
     """Verify that an unknown geography yields a clean 404 (DomainException mapping)."""
     # Since we use db_session dependency override generally, we don't necessarily need it
     # if it just returns an empty result, but it should trigger a NotFoundException from the service.
-    from app.api.dependencies.db import get_db
-    from app.main import app as main_app
-    from app.db.base import Base
-    import app.models  # noqa
-
     from unittest.mock import MagicMock
-    from app.services.analytics import AnalyticsService
+
+    import app.models  # noqa
     from app.core.exceptions import NotFoundException
+    from app.main import app as main_app
+    from app.services.analytics import AnalyticsService
 
     # Instead of hitting a real database for validation error checking,
     # mock the service to just throw the expected exception.
