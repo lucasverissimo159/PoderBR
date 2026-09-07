@@ -5,7 +5,7 @@ from slowapi.errors import RateLimitExceeded
 from starlette.middleware.base import BaseHTTPMiddleware
 from starlette.requests import Request
 
-from app.api.routes import affordability, health
+from app.api.routes import affordability, health, quality
 from app.core.config import settings
 from app.core.exceptions import DomainException, domain_exception_handler
 from app.core.logging import setup_logging
@@ -54,6 +54,9 @@ def create_app() -> FastAPI:
     app.include_router(health.router, tags=["System"])
     app.include_router(
         affordability.router, prefix=settings.API_V1_STR, tags=["Analytics"]
+    )
+    app.include_router(
+        quality.router, prefix=f"{settings.API_V1_STR}/quality", tags=["Observability"]
     )
 
     return app

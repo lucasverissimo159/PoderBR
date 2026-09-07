@@ -1,6 +1,7 @@
 import { useState } from "react";
 import type { AffordabilityMeta } from "@/api/hooks/useAffordabilityData";
-import { ChevronDown, ChevronUp, Info } from "lucide-react";
+import { useQualityStatus } from "@/api/hooks/useQualityStatus";
+import { ChevronDown, ChevronUp, Info, AlertTriangle } from "lucide-react";
 
 interface MethodologyDisclosureProps {
   meta?: AffordabilityMeta;
@@ -8,6 +9,9 @@ interface MethodologyDisclosureProps {
 
 export function MethodologyDisclosure({ meta }: MethodologyDisclosureProps) {
   const [isOpen, setIsOpen] = useState(false);
+  const { data: qualityData } = useQualityStatus();
+
+  const hasIssues = qualityData?.report.issues && qualityData.report.issues.length > 0;
 
   return (
     <div className="border border-border rounded-md bg-surface my-6">
@@ -20,6 +24,12 @@ export function MethodologyDisclosure({ meta }: MethodologyDisclosureProps) {
         <div className="flex items-center space-x-2">
           <Info className="w-5 h-5 text-primary" aria-hidden="true" />
           <h2 className="text-lg font-semibold text-text-primary">Data Sources & Methodology</h2>
+          {hasIssues && (
+            <span className="flex items-center ml-2 px-2 py-0.5 bg-yellow-100 text-yellow-800 text-xs font-medium rounded-full">
+              <AlertTriangle className="w-3 h-3 mr-1" />
+              Data Quality Warning
+            </span>
+          )}
         </div>
         {isOpen ? (
           <ChevronUp className="w-5 h-5 text-text-secondary" aria-hidden="true" />
@@ -62,6 +72,22 @@ export function MethodologyDisclosure({ meta }: MethodologyDisclosureProps) {
               Missing data points for nominal prices or incomes result in <strong>Missing</strong> quality flags. The platform does not silently impute or interpolate data. Partial baskets (where 1 or more proteins are missing) are not calculated.
             </p>
           </div>
+
+          {hasIssues && (
+            <div className="bg-yellow-50 border border-yellow-200 p-3 rounded-md mt-4">
+              <h3 className="font-semibold text-yellow-800 mb-2 flex items-center">
+                <AlertTriangle className="w-4 h-4 mr-1" />
+                Active Quality Issues
+              </h3>
+              <ul className="list-disc pl-5 space-y-1 text-yellow-800">
+                {qualityData.report.issues.map((issue, idx) => (
+                  <li key={idx}>
+                    <strong>{issue.category}:</strong> {issue.message}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
 
           {meta?.last_updated && (
             <p className="text-xs mt-4 pt-4 border-t border-border">
