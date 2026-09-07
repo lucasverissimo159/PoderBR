@@ -2,6 +2,8 @@ import { render, screen, fireEvent } from "@testing-library/react";
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import Dashboard from "./Dashboard";
 
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+
 // Mock the API hook since we are only testing the UI logic
 vi.mock("@/api/hooks/useAffordabilityData", () => ({
   useAffordabilityData: vi.fn(() => ({
@@ -21,6 +23,16 @@ vi.mock("@/api/hooks/useAffordabilityData", () => ({
     isLoading: false,
     isError: false,
     refetch: vi.fn(),
+  })),
+}));
+
+// Also mock the quality hook
+vi.mock("@/api/hooks/useQualityStatus", () => ({
+  useQualityStatus: vi.fn(() => ({
+    data: {
+      report: { is_healthy: true, issues: [] },
+      ingestion_summary: []
+    }
   })),
 }));
 
