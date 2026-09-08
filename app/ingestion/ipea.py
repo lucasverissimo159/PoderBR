@@ -3,6 +3,7 @@ from datetime import datetime
 from typing import Any
 
 import httpx
+from tenacity import retry, stop_after_attempt, wait_exponential, retry_if_exception_type
 
 from app.ingestion.base import BaseAdapter
 from app.models.core import DataSource
@@ -22,7 +23,13 @@ class IpeadataAdapter(BaseAdapter):
             url=f"{self.BASE_URL}/Metadados('{self.DATASET_ID}')",
         )
 
-    def fetch_data(self) -> Generator[dict[str, Any], None, None]:
+    @retry(
+        stop=stop_after_attempt(3),
+        wait=wait_exponential(multiplier=1, min=2, max=10),
+        retry=retry_if_exception_type((httpx.RequestError, httpx.TimeoutException)),
+        reraise=True
+    )
+    def _fetch_from_api(self) -> Any:
         # Using synchronous httpx for simplicity in scheduled jobs
         with httpx.Client(timeout=30.0) as client:
             # Ipeadata OData returns a 'value' array
@@ -31,25 +38,28 @@ class IpeadataAdapter(BaseAdapter):
                 f"{self.BASE_URL}/ValoresSerie(SERCODIGO='{self.DATASET_ID}')"
             )
             response.raise_for_status()
-            data = response.json()
+            return response.json()
 
-            if "value" not in data:
-                raise ValueError(
-                    "Schema drift: Ipeadata response missing 'value' array"
-                )
+    def fetch_data(self) -> Generator[dict[str, Any], None, None]:
+        data = self._fetch_from_api()
 
-            for record in data["value"]:
-                # Expected format: "2024-01-01T00:00:00-03:00"
-                date_str = record.get("VALDATA", "")
-                if not date_str:
-                    continue
+        if "value" not in data:
+            raise ValueError(
+                "Schema drift: Ipeadata response missing 'value' array"
+            )
 
-                ref_date = datetime.fromisoformat(date_str).date()
+        for record in data["value"]:
+            # Expected format: "2024-01-01T00:00:00-03:00"
+            date_str = record.get("VALDATA", "")
+            if not date_str:
+                continue
 
-                # Minimum wage is national, so geography_id is canonical 'BR'
-                yield {
-                    "geography_id": "BR",
-                    "reference_date": ref_date,
-                    "value": float(record.get("VALVALOR", 0.0)),
-                    "unit": "BRL",
-                }
+            ref_date = datetime.fromisoformat(date_str).date()
+
+            # Minimum wage is national, so geography_id is canonical 'BR'
+            yield {
+                "geography_id": "BR",
+                "reference_date": ref_date,
+                "value": float(record.get("VALVALOR", 0.0)),
+                "unit": "BRL",
+            }

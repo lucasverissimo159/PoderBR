@@ -4,6 +4,7 @@ from datetime import date
 from typing import Any
 
 import httpx
+from tenacity import retry, stop_after_attempt, wait_exponential, retry_if_exception_type
 
 from app.ingestion.base import BaseAdapter
 from app.models.core import DataSource
@@ -36,54 +37,58 @@ class IbgeSidraAdapter(BaseAdapter):
         month = (quarter - 1) * 3 + 1
         return date(year, month, 1)
 
-    def fetch_data(self) -> Generator[dict[str, Any], None, None]:
+    @retry(
+        stop=stop_after_attempt(3),
+        wait=wait_exponential(multiplier=1, min=2, max=10),
+        retry=retry_if_exception_type((httpx.RequestError, httpx.TimeoutException)),
+        reraise=True
+    )
+    def _fetch_from_api(self) -> Any:
         with httpx.Client(timeout=30.0) as client:
-            # We query national (1) and state (3) levels.
-            # Variable 12384 is the specific average income variable within table 10280
-            # (needs verification against actual SIDRA, assuming standard shape for now)
-            # URL format:
-            # /api/v3/agregados/table/periodos/all/variaveis?localidades=N1[all]|N3[all]
             locs = "N1[all]|N3[all]"
             path = f"{self.DATASET_ID}/periodos/all/variaveis?localidades={locs}"
             url = f"{self.BASE_URL}/{path}"
             response = client.get(url)
             response.raise_for_status()
-            data = response.json()
+            return response.json()
 
-            if not isinstance(data, list) or len(data) == 0:
-                raise ValueError(
-                    "Schema drift: IBGE SIDRA returned empty or non-list data"
-                )
+    def fetch_data(self) -> Generator[dict[str, Any], None, None]:
+        data = self._fetch_from_api()
 
-            for variable_group in data:
-                # Iterate through results per geography
-                for result in variable_group.get("resultados", []):
-                    geo_id = result.get("localidade", {}).get("id")
-                    if not geo_id:
-                        continue
+        if not isinstance(data, list) or len(data) == 0:
+            raise ValueError(
+                "Schema drift: IBGE SIDRA returned empty or non-list data"
+            )
 
-                    for series in result.get("series", []):
-                        for period, value_str in series.items():
-                            if (
-                                value_str == "-"
-                                or value_str == "..."
-                                or value_str == "X"
-                            ):
-                                value = None
-                            else:
-                                try:
-                                    value = float(value_str)
-                                except ValueError:
-                                    value = None
+        for variable_group in data:
+            # Iterate through results per geography
+            for result in variable_group.get("resultados", []):
+                geo_id = result.get("localidade", {}).get("id")
+                if not geo_id:
+                    continue
 
+                for series in result.get("series", []):
+                    for period, value_str in series.items():
+                        if (
+                            value_str == "-"
+                            or value_str == "..."
+                            or value_str == "X"
+                        ):
+                            value = None
+                        else:
                             try:
-                                ref_date = self._parse_quarter(period)
+                                value = float(value_str)
                             except ValueError:
-                                continue  # Skip invalid dates safely
+                                value = None
 
-                            yield {
-                                "geography_id": geo_id,
-                                "reference_date": ref_date,
-                                "value": value,
-                                "unit": "BRL",
-                            }
+                        try:
+                            ref_date = self._parse_quarter(period)
+                        except ValueError:
+                            continue  # Skip invalid dates safely
+
+                        yield {
+                            "geography_id": geo_id,
+                            "reference_date": ref_date,
+                            "value": value,
+                            "unit": "BRL",
+                        }
