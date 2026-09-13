@@ -8,10 +8,10 @@ from sqlalchemy import (
     DateTime,
     Enum,
     ForeignKey,
+    Index,
     Numeric,
     String,
     UniqueConstraint,
-    Index,
 )
 from sqlalchemy.orm import Mapped, mapped_column
 from sqlalchemy.sql import func
@@ -85,7 +85,12 @@ class RawObservation(Base):
             "geography_id",
             name="uq_raw_obs_source_date_geo",
         ),
-        Index("ix_raw_obs_source_geo_date", "source_id", "geography_id", "reference_date"),
+        Index(
+            "ix_raw_obs_source_geo_date",
+            "source_id",
+            "geography_id",
+            "reference_date",
+        ),
     )
 
 
@@ -112,7 +117,12 @@ class NormalizedPrice(Base):
             "geography_id",
             name="uq_norm_price_item_date_geo",
         ),
-        Index("ix_norm_price_geo_item_date", "geography_id", "item_id", "reference_date"),
+        Index(
+            "ix_norm_price_geo_item_date",
+            "geography_id",
+            "item_id",
+            "reference_date",
+        ),
     )
 
 
@@ -140,7 +150,12 @@ class NormalizedIncome(Base):
             "geography_id",
             name="uq_norm_income_basis_date_geo",
         ),
-        Index("ix_norm_income_geo_basis_date", "geography_id", "income_basis", "reference_date"),
+        Index(
+            "ix_norm_income_geo_basis_date",
+            "geography_id",
+            "income_basis",
+            "reference_date",
+        ),
     )
 
 

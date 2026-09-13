@@ -1,6 +1,5 @@
-from datetime import datetime, timedelta
-
 from collections import defaultdict
+from datetime import datetime, timedelta
 
 from sqlalchemy import desc, select
 from sqlalchemy.orm import Session
@@ -34,11 +33,14 @@ class QualityService:
         if latest_price:
             days_stale = (datetime.now().date() - latest_price.reference_date).days
             if days_stale > 45:
-                issues.append(QualityIssue(
-                    level="warning",
-                    category="staleness",
-                    message=f"Latest normalized price is {days_stale} days old (Threshold: 45)."
-                ))
+                issues.append(
+                    QualityIssue(
+                        level="warning",
+                        category="staleness",
+                        message=f"Latest normalized price is {days_stale} days "
+                        "old (Threshold: 45).",
+                    )
+                )
         else:
             issues.append(QualityIssue(
                 level="critical",
@@ -79,11 +81,14 @@ class QualityService:
                     if prev > 0:
                         pct_change = abs((curr - prev) / prev)
                         if pct_change > 0.5:
-                            issues.append(QualityIssue(
-                                level="warning",
-                                category="anomaly",
-                                message=f"Spike >50% detected in {item_id} prices over the last 6 months."
-                            ))
+                            issues.append(
+                                QualityIssue(
+                                    level="warning",
+                                    category="anomaly",
+                                    message=f"Spike >50% detected in {item_id} prices "
+                                    "over the last 6 months.",
+                                )
+                            )
                             break # Only record one spike issue per item to avoid spam
 
         # 3. Ingestion Summary

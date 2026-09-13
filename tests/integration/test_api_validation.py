@@ -21,9 +21,12 @@ def test_api_invalid_date_format():
     assert "start_date" in str(data["detail"])
 
 def test_api_not_found_geography(db_session):
-    """Verify that an unknown geography yields a clean 404 (DomainException mapping)."""
-    # Since we use db_session dependency override generally, we don't necessarily need it
-    # if it just returns an empty result, but it should trigger a NotFoundException from the service.
+    """
+    Verify that an unknown geography yields a clean 404 (DomainException mapping).
+    """
+    # Since we use db_session dependency override generally, we don't necessarily
+    # need it if it just returns an empty result, but it should trigger a
+    # NotFoundException.
     from unittest.mock import MagicMock
 
     import app.models  # noqa
@@ -34,7 +37,9 @@ def test_api_not_found_geography(db_session):
     # Instead of hitting a real database for validation error checking,
     # mock the service to just throw the expected exception.
     mock_service = MagicMock(spec=AnalyticsService)
-    mock_service.calculate_affordability.side_effect = NotFoundException("Geography UNKNOWN_GEO")
+    mock_service.calculate_affordability.side_effect = NotFoundException(
+        "Geography UNKNOWN_GEO"
+    )
 
     # Override the service dependency directly
     from app.api.routes.affordability import get_analytics_service

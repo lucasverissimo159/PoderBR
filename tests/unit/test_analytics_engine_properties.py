@@ -41,14 +41,20 @@ class MockRepositoryForFuzzing:
 
 
 @given(
-    beef_price=st.floats(min_value=0.0, max_value=1e6, allow_nan=False, allow_infinity=False),
-    eggs_price=st.floats(min_value=0.0, max_value=1e6, allow_nan=False, allow_infinity=False),
-    income=st.floats(min_value=-1000.0, max_value=1e9, allow_nan=False, allow_infinity=False),
+    beef_price=st.floats(
+        min_value=0.0, max_value=1e6, allow_nan=False, allow_infinity=False
+    ),
+    eggs_price=st.floats(
+        min_value=0.0, max_value=1e6, allow_nan=False, allow_infinity=False
+    ),
+    income=st.floats(
+        min_value=-1000.0, max_value=1e9, allow_nan=False, allow_infinity=False
+    ),
 )
 def test_analytics_fuzzing(beef_price, eggs_price, income):
     """
     Fuzz test the core AnalyticsService calculator.
-    It must never crash on zero/negative values, merely return 'missing' or 'partial' state.
+    It must never crash on zero/negative values, merely return 'missing' or 'partial'.
     """
     prices = [
         NormalizedPrice(

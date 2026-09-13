@@ -28,8 +28,8 @@ def test_ibge_adapter_network_timeout(db_session, monkeypatch):
 
     # Verify the failure run was logged properly (if the adapter handles it)
     # The current BaseAdapter.run does not catch exceptions around fetch_data,
-    # it lets them bubble up for the cron to handle. But it creates the run first.
-    # Actually, the BaseAdapter wraps fetch_data in a transaction but doesn't swallow exceptions.
+    # it lets them bubble up for the cron to handle.
+    # The BaseAdapter wraps fetch_data in a transaction but doesn't swallow exceptions.
 
     # We expect an ingestion run to be created but not marked 'success'
     run = db_session.query(IngestionRun).first()
@@ -56,10 +56,12 @@ def test_ibge_adapter_schema_drift(db_session, monkeypatch):
 
     # The adapter validates if it's a non-empty list. If we pass invalid structure,
     # it raises ValueError or yields empty. Here, we test a structure that passes
-    # the top level list check but has wrong internal dictionary keys (like missing "resultados")
+    # the top level list check but has wrong internal dictionary keys.
     # Actually, the code handles missing "resultados" gracefully by yielding nothing.
     # To cause a failure, let's pass a dict instead of a list.
-    with pytest.raises(ValueError, match="Schema drift: IBGE SIDRA returned empty or non-list data"):
+    with pytest.raises(
+        ValueError, match="Schema drift: IBGE SIDRA returned empty or non-list data"
+    ):
         adapter.run()
 
     # Database must remain uncorrupted
