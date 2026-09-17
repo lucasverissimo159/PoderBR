@@ -15,6 +15,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - **Accessible Charts**: Recharts visualizations wrapped in `AccessibleChart` toggles with semantic HTML `DataTable` fallbacks.
 - **Data Observability**: Introduced `QualityService` checking staleness and anomalies without silent deletion. Surfaced via `/api/v1/quality/status`.
 - **Security Hardening**: Docker multi-stage builds, non-root user isolation, `slowapi` rate limiting, CORS configuration, and CI dependency audits (`pip-audit`).
+- **Release Documentation**: Added `FINAL-AUDIT.md` completing the principal audit, declaring the system production-ready with zero open blockers.
 
 ### Fixed
 - Fixed an upstream integration error in `pytest` where SQLAlchemy test-session memory metadata was missing in-memory model loads for `normalized_prices` and `geography`.
