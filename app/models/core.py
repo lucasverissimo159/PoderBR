@@ -8,6 +8,7 @@ from sqlalchemy import (
     DateTime,
     Enum,
     ForeignKey,
+    Index,
     Numeric,
     String,
     UniqueConstraint,
@@ -84,6 +85,12 @@ class RawObservation(Base):
             "geography_id",
             name="uq_raw_obs_source_date_geo",
         ),
+        Index(
+            "ix_raw_obs_source_geo_date",
+            "source_id",
+            "geography_id",
+            "reference_date",
+        ),
     )
 
 
@@ -109,6 +116,12 @@ class NormalizedPrice(Base):
             "reference_date",
             "geography_id",
             name="uq_norm_price_item_date_geo",
+        ),
+        Index(
+            "ix_norm_price_geo_item_date",
+            "geography_id",
+            "item_id",
+            "reference_date",
         ),
     )
 
@@ -136,6 +149,12 @@ class NormalizedIncome(Base):
             "reference_date",
             "geography_id",
             name="uq_norm_income_basis_date_geo",
+        ),
+        Index(
+            "ix_norm_income_geo_basis_date",
+            "geography_id",
+            "income_basis",
+            "reference_date",
         ),
     )
 

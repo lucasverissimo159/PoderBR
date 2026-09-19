@@ -25,7 +25,12 @@ def test_quality_service_healthy(db_session):
     )
 
     ds = DataSource(id="test_ds", provider="test", dataset_name="test", url="test")
-    run = IngestionRun(source_id="test_ds", status="success", started_at=datetime.now(), completed_at=datetime.now())
+    run = IngestionRun(
+        source_id="test_ds",
+        status="success",
+        started_at=datetime.now(),
+        completed_at=datetime.now()
+    )
 
     db_session.add_all([p1, p2, ds, run])
     db_session.commit()

@@ -18,6 +18,7 @@ import os  # noqa: E402
 import sys  # noqa: E402
 
 sys.path.insert(0, os.path.realpath(os.path.join(os.path.dirname(__file__), "..")))
+import app.models  # noqa: E402, F401
 from app.db.base import Base  # noqa: E402
 
 # fmt: on

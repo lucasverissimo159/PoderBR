@@ -1,6 +1,6 @@
 from datetime import date
 
-from fastapi import APIRouter, Depends, Request
+from fastapi import APIRouter, Depends, Request, Response
 from sqlalchemy.orm import Session
 
 from app.api.dependencies.db import get_db
@@ -21,6 +21,7 @@ def get_analytics_service(db: Session = Depends(get_db)) -> AnalyticsService:
 @limiter.limit("100/minute")
 def get_affordability(
     request: Request,
+    response: Response,
     basket_id: str,
     geography_id: str,
     income_basis: str,
@@ -33,6 +34,10 @@ def get_affordability(
     Retrieve the affordability index (income burden) for a specific basket
     and geography.
     """
+    # In a real app this is data that changes once a month.
+    # Caching it for 1 hour locally/in CDNs is extremely safe.
+    response.headers["Cache-Control"] = "public, max-age=3600"
+
     req = AnalyticsRequest(
         basket_id=basket_id,
         geography_id=geography_id,

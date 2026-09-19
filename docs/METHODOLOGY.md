@@ -42,3 +42,8 @@ The affordability normalized against a declared base period ($t_0$), making it e
 - **Nominal vs Real:** All calculations use **nominal** prices and **nominal** income from the exact same period $t$. We do *not* deflate or inflate historical prices using the IPCA, ensuring we measure actual affordability at the time the transaction occurred.
 - **Missing Data:** If the price for *any single item* in the basket is missing for period $t$, the total basket cost cannot be calculated. The entire period $t$ is marked as `partial` and returns `null` for aggregate metrics. We do not substitute with zero or interpolate missing months.
 - **Zero Income:** If income is zero or missing, $B_t$, $A_t$, and $PPI_t$ are mathematically undefined and will return `null`.
+
+## 4. What this Index is NOT
+- **It is NOT a general measure of inflation.** The IPCA (Índice Nacional de Preços ao Consumidor Amplo) is the official measure of inflation in Brazil. Our index looks strictly at protein affordability.
+- **It is NOT a welfare claim.** The platform illustrates price pressure on a specific dietary basket. It cannot make claims about general living standards, housing costs, or overall poverty.
+- **It is NOT an exact household budget.** The default weights (e.g. 5kg of Beef) are illustrative baselines designed to create a recognizable financial impact scenario.
